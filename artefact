@@ -1,0 +1,46 @@
+
+ sudo apt update 
+ sudo apt-get -y install realmd 
+sudo apt-get -y install sssd 
+sudo apt-get -y install sssd-tools 
+sudo apt-get -y install samba-common
+sudo apt-get -y install   krb5-user
+ sudo apt-get -y install packagekit 
+sudo apt-get -y install samba-common-bin 
+sudo apt-get -y install samba-lib
+sudo apt-get -y install adcli ntp 
+
+
+Kerberos Authentication 
+: SERVER .MY DOMAIN SERVER.MY.DOMAIN
+
+
+sudo realm join my. domain -U 'Administrator@MY.DOMAIN' -v
+
+
+sudo vi /etc/realmd.conf 
+... [users] default-home = /home/%D/%U
+ default-shell = /bin/bash [active-directory] 
+default-client = sssd 
+os-name = Ubuntu 
+Desktop Linux os-version = 18.10
+ [service] 
+automatic-install = no 
+ [my.domain] fully-qualified-names = no 
+automatic-id-mapping = yes
+ user-principal = yes
+ manage-system = no ...
+
+
+sudo kinit Administrator@MY.DOMAIN  
+ Password for Administrator@MY.DOMAIN:
+
+sudo vi /etc/pam.d/common-session
+ ... 
+session required pam_unix.so 
+session optional pam_winbind.so 
+session optional pam_sss.so 
+session optional pam_systemd.so 
+session required pam_mkhomedir.so 
+Skel=/etc/Skel/ umask=0077 
+...
